@@ -5,11 +5,6 @@ plugins {
   id "com.github.johnrengelman.shadow" version "6.1.0"
 }
 
-ext {
-  mavenUsername = ""
-  mavenToken = ""
-}
-
 repositories {
   mavenCentral()
 }
@@ -51,7 +46,7 @@ publishing {
 
           credentials {
             username = "djfdyuruiry"
-            password = mavenToken
+            password = System.getenv("GITHUB_TOKEN")
           }
         }
       }
