@@ -6,6 +6,7 @@ plugins {
 }
 
 ext {
+  mavenUsername = ""
   mavenToken = ""
 }
 
@@ -45,7 +46,8 @@ publishing {
 
       repositories {
         maven {
-          url "https://maven.pkg.github.com/djfdyuruiry"
+          name = "GitHubPackages"
+          url "https://maven.pkg.github.com/djfdyuruiry/jmeter-azure-app-insights"
 
           credentials {
             username = "djfdyuruiry"

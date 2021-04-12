@@ -20,7 +20,7 @@ jobs:
 
       - uses: eskatos/gradle-command-action@v1
         with:
-          arguments: clean publish -PmavenToken=${{ secrets.GITHUB_TOKEN }} # publish
+          arguments: clean publish -PmavenUsername=${{ env.GITHUB_ACTOR }} -PmavenToken=${{ secrets.GITHUB_TOKEN }} # publish
           wrapper-cache-enabled: true
           dependencies-cache-enabled: true
           configuration-cache-enabled: true
