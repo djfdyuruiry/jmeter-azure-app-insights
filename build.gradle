@@ -1,0 +1,121 @@
+plugins {
+  id "java"
+  id "maven-publish"
+
+  id "com.github.johnrengelman.shadow" version "6.1.0"
+}
+
+ext {
+  mavenToken = ""
+}
+
+repositories {
+  mavenCentral()
+}
+
+group = "io.github.djfdyuruiry.jmeter.azure"
+version = "0.1.0"
+description = "jmeter-azure-app-insights"
+
+publishing {
+  publications {
+    maven(MavenPublication) {
+      artifact shadowJar
+
+      pom {
+        name = "Azure AppInsights JMeter Plugin"
+        description = "Plugin for the JMeter test tool that reports test request telemetry to Azure AppInsights"
+        url = "https://github.com/djfdyuruiry/jmeter-azure-app-insights"
+
+        licenses {
+          license {
+            name = "MIT License"
+            url = "https://raw.githubusercontent.com/djfdyuruiry/jmeter-azure-app-insights/refactor-and-include-http-properties/LICENSE"
+          }
+        }
+
+        developers {
+          developer {
+            id = "djfdyuruiry"
+            name = "Matthew Snoddy"
+            email = "djfdyuruiry@noreply.github.com"
+          }
+        }
+      }
+
+      repositories {
+        maven {
+          url "https://maven.pkg.github.com/djfdyuruiry"
+
+          credentials {
+            username = "djfdyuruiry"
+            password = mavenToken
+          }
+        }
+      }
+    }
+  }
+}
+
+dependencies {
+  final excludeJmeterBom = {
+    exclude group: "org.apache.jmeter", module: "bom"
+  }
+
+  compileOnly "org.apache.jmeter:ApacheJMeter_components:${JMETER_VERSION}", excludeJmeterBom
+  compileOnly "org.apache.jmeter:ApacheJMeter_config:${JMETER_VERSION}", excludeJmeterBom
+  compileOnly "org.apache.jmeter:ApacheJMeter_core:${JMETER_VERSION}", excludeJmeterBom
+  compileOnly "org.apache.jmeter:ApacheJMeter_http:${JMETER_VERSION}", excludeJmeterBom
+  compileOnly "org.apache.jmeter:jorphan:${JMETER_VERSION}", excludeJmeterBom
+
+  compileOnly "org.apache.commons:commons-lang3:3.11"
+
+  implementation "com.microsoft.azure:applicationinsights-core:2.6.3"
+  
+  testImplementation "org.apache.jmeter:ApacheJMeter_components:${JMETER_VERSION}", excludeJmeterBom
+  testImplementation "org.apache.jmeter:ApacheJMeter_config:${JMETER_VERSION}", excludeJmeterBom
+  testImplementation "org.apache.jmeter:ApacheJMeter_core:${JMETER_VERSION}", excludeJmeterBom
+  testImplementation "org.apache.jmeter:ApacheJMeter_http:${JMETER_VERSION}", excludeJmeterBom
+  testImplementation "org.apache.jmeter:jorphan:${JMETER_VERSION}", excludeJmeterBom
+
+  testImplementation "org.apache.commons:commons-lang3:3.11"
+
+  testImplementation "org.junit.jupiter:junit-jupiter-api:${JUNIT_VERSION}"
+  testImplementation "org.junit.jupiter:junit-jupiter-params:${JUNIT_VERSION}"
+
+  testImplementation "org.mockito:mockito-core:3.8.0"
+  testImplementation "org.mockito:mockito-junit-jupiter:3.8.0"
+
+  testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine:${JUNIT_VERSION}"
+}
+
+compileJava   {
+  sourceCompatibility = "11"
+  targetCompatibility = "11"
+}
+
+test {
+  useJUnitPlatform()
+}
+
+shadowJar {
+  dependsOn test
+
+  dependencies {
+    exclude dependency("org.apache.jmeter:*")
+    exclude dependency("commons-codec:*")
+    exclude dependency("commons-logging:*")
+    exclude dependency("org.apache.httpcomponents:*")
+    exclude dependency("net.java.dev.jna:*")
+  }
+
+  mergeServiceFiles {
+    exclude "META-INF/*.SF"
+    exclude "META-INF/*.DSA"
+    exclude "META-INF/*.RSA" 
+  }
+}
+
+publish {
+  dependsOn shadowJar
+}
