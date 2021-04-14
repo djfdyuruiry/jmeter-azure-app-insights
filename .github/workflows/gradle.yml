@@ -1,6 +1,7 @@
 name: Build & Test
 
-on: [push]
+on:
+  - push
 
 jobs:
   build:
@@ -14,7 +15,7 @@ jobs:
         uses: actions/setup-java@v1
         with:
           java-version: 11
-          distribution: "adopt"
+          distribution: adopt
 
       - uses: eskatos/gradle-command-action@v1
         with:

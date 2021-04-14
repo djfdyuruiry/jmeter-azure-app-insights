@@ -2,7 +2,8 @@ name: Publish Maven Package
 
 on:
   release:
-    types: [created]
+    types:
+      - created
 
 jobs:
   publish:
@@ -14,10 +15,10 @@ jobs:
         uses: actions/checkout@v1
 
       - name: Set up JDK 11
-        uses: actions/setup-java@v1
+        uses: actions/setup-java@v2
         with:
           java-version: 11
-          distribution: "adopt"
+          distribution: adopt
 
       - uses: eskatos/gradle-command-action@v1
         with:
